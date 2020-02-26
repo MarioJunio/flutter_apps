@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
-import './ui/home-page.dart';
+import './ui/home_page.dart';
 
-void main() => runApp(Home());
+void main() => runApp(MaterialApp(
+      home: Home(),
+      debugShowCheckedModeBanner: false,
+    )); 
