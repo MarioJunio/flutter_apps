@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../model/contact.dart';
 
@@ -57,14 +58,18 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             children: <Widget>[
               GestureDetector(
+                onTap: _getImage,
                 child: Container(
                   width: 180,
                   height: 180,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(image: picture)),
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: picture, fit: BoxFit.cover),
+                  ),
                 ),
               ),
+              Divider(color: Colors.transparent),
+              Divider(color: Colors.transparent),
               TextField(
                 controller: nameController,
                 focusNode: nameFocus,
@@ -116,32 +121,45 @@ class _ContactPageState extends State<ContactPage> {
   Future<bool> _canPop() {
     if (_edited) {
       showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("Descartar alterações?"),
-              content: Text("Ao sair as alterações serão perdidas."),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("Cancelar"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                FlatButton(
-                  child: Text("Sair"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            );
-          });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Descartar alterações?"),
+            content: Text("Ao sair as alterações serão perdidas."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancelar"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text("Sair"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
 
       return Future.value(false);
     } else {
       return Future.value(true);
+    }
+  }
+
+  void _getImage() async {
+    final File getPicture = await ImagePicker.pickImage(source: ImageSource.camera);
+    
+    if (getPicture != null) {
+
+      setState(() {
+        _contact.picture = getPicture.path;
+      });
+      
     }
   }
 }

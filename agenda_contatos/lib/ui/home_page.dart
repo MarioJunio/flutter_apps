@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:agenda_contatos/repository/contact-repository.dart';
 import 'package:agenda_contatos/ui/contact_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/contact.dart';
+
+enum OrderOptions { asc, desc }
 
 class Home extends StatefulWidget {
   @override
@@ -13,7 +16,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   ContactRepository contactRepository = ContactRepository();
-  List<Contact> contacts = List();
+  List<Contact> _contacts = List();
 
   @override
   void initState() {
@@ -29,10 +32,24 @@ class _HomeState extends State<Home> {
         title: Text("Meus contatos"),
         backgroundColor: Colors.red,
         centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton(
+              onSelected: _selectAction,
+              itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+                    PopupMenuItem(
+                      child: Text("Ordenar A-Z"),
+                      value: OrderOptions.asc,
+                    ),
+                    PopupMenuItem(
+                      child: Text("Ordenar Z-A"),
+                      value: OrderOptions.desc,
+                    ),
+                  ])
+        ],
       ),
       body: ListView.builder(
         itemBuilder: listItemContatos,
-        itemCount: contacts.length,
+        itemCount: _contacts.length,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
@@ -43,7 +60,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget listItemContatos(context, index) {
-    final Contact item = contacts[index];
+    final Contact item = _contacts[index];
 
     final picture = item.picture != null
         ? FileImage(File(item.picture))
@@ -51,7 +68,7 @@ class _HomeState extends State<Home> {
 
     return GestureDetector(
       onTap: () {
-        _openPageContact(contact: item);
+        _openOptionsOnBottom(index, contact: item);
       },
       child: Padding(
         padding: EdgeInsets.all(5),
@@ -64,10 +81,10 @@ class _HomeState extends State<Home> {
                 height: 80,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    image: DecorationImage(image: picture)),
+                    image: DecorationImage(image: picture, fit: BoxFit.cover)),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 5),
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -100,9 +117,61 @@ class _HomeState extends State<Home> {
   _load() {
     contactRepository.all().then((values) {
       setState(() {
-        contacts = values;
+        _contacts = values;
       });
     });
+  }
+
+  _openOptionsOnBottom(int index, {Contact contact}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  FlatButton.icon(
+                    onPressed: () {
+                      _callContact(contact.phone);
+                    },
+                    icon: Icon(Icons.call),
+                    label: Text("Ligar"),
+                  ),
+                  FlatButton.icon(
+                    onPressed: () {
+                      _openPageContact(contact: contact);
+                    },
+                    icon: Icon(Icons.edit),
+                    label: Text("Editar"),
+                  ),
+                  FlatButton.icon(
+                    onPressed: () {
+                      _deleteContact(index, contact.id);
+                    },
+                    icon: Icon(Icons.delete),
+                    label: Text("Excluir"),
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void addContact() {
+    _openPageContact();
+  }
+
+  _callContact(String phone) {
+    launch("tel:$phone");
+    Navigator.pop(context);
   }
 
   _openPageContact({Contact contact}) async {
@@ -125,7 +194,24 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void addContact() {
-    _openPageContact();
+  _deleteContact(int index, int id) async {
+    await contactRepository.delete(id);
+
+    setState(() {
+      _contacts.removeAt(index);
+      Navigator.pop(context);
+    });
+  }
+
+  void _selectAction(OrderOptions value) {
+    switch (value) {
+      case OrderOptions.asc:
+        _contacts.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case OrderOptions.desc:
+        _contacts.sort((a, b) => b.name.compareTo(a.name));
+    }
+
+    setState(() {});
   }
 }
