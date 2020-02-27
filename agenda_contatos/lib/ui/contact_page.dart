@@ -44,56 +44,59 @@ class _ContactPageState extends State<ContactPage> {
         ? FileImage(File(_contact.picture))
         : AssetImage("images/person.png");
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_contact.name ?? "Novo contato"),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(image: picture)),
-              ),
-            ),
-            TextField(
-              controller: nameController,
-              focusNode: nameFocus,
-              keyboardType: TextInputType.text,
-              onChanged: _changeEdited,
-              decoration: InputDecoration(
-                  labelText: "Nome", border: OutlineInputBorder()),
-            ),
-            Divider(color: Colors.transparent),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              onChanged: _changeEdited,
-              decoration: InputDecoration(
-                  labelText: "Email", border: OutlineInputBorder()),
-            ),
-            Divider(color: Colors.transparent),
-            TextField(
-              controller: phoneController,
-              keyboardType: TextInputType.number,
-              onChanged: _changeEdited,
-              decoration: InputDecoration(
-                  labelText: "Phone", border: OutlineInputBorder()),
-            )
-          ],
+    return WillPopScope(
+      onWillPop: _canPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_contact.name ?? "Novo contato"),
+          centerTitle: true,
+          backgroundColor: Colors.red,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _save,
-        backgroundColor: Colors.red,
-        child: Icon(Icons.save),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: picture)),
+                ),
+              ),
+              TextField(
+                controller: nameController,
+                focusNode: nameFocus,
+                keyboardType: TextInputType.text,
+                onChanged: _changeEdited,
+                decoration: InputDecoration(
+                    labelText: "Nome", border: OutlineInputBorder()),
+              ),
+              Divider(color: Colors.transparent),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: _changeEdited,
+                decoration: InputDecoration(
+                    labelText: "Email", border: OutlineInputBorder()),
+              ),
+              Divider(color: Colors.transparent),
+              TextField(
+                controller: phoneController,
+                keyboardType: TextInputType.number,
+                onChanged: _changeEdited,
+                decoration: InputDecoration(
+                    labelText: "Phone", border: OutlineInputBorder()),
+              )
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _save,
+          backgroundColor: Colors.red,
+          child: Icon(Icons.save),
+        ),
       ),
     );
   }
@@ -107,6 +110,38 @@ class _ContactPageState extends State<ContactPage> {
       Navigator.pop(context, _contact);
     } else {
       FocusScope.of(context).requestFocus(nameFocus);
+    }
+  }
+
+  Future<bool> _canPop() {
+    if (_edited) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Descartar alterações?"),
+              content: Text("Ao sair as alterações serão perdidas."),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Cancelar"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text("Sair"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          });
+
+      return Future.value(false);
+    } else {
+      return Future.value(true);
     }
   }
 }

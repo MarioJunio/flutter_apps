@@ -115,13 +115,11 @@ class _HomeState extends State<Home> {
       ),
     );
 
-    print(resultContact);
-
     if (resultContact != null) {
       if (contact == null)
-        contactRepository.save(contact);
+        contactRepository.save(resultContact);
       else
-        contactRepository.edit(contact);
+        contactRepository.edit(resultContact);
 
       _load();
     }
