@@ -4,7 +4,8 @@ import 'ui/main_page.dart';
 
 main(List<String> args) {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: MainPage(),
-    theme: ThemeData(hintColor: Colors.white, primaryColor: Colors.white),
+    theme: ThemeData.light(),
   ));
 }

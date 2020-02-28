@@ -1,5 +1,8 @@
 import 'package:buscador_gifs/api/giphy_api.dart';
+import 'package:buscador_gifs/ui/gif_page.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -7,6 +10,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  String _text;
+  int _offset;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +28,13 @@ class _MainPageState extends State<MainPage> {
           Padding(
             padding: const EdgeInsets.all(20),
             child: TextField(
+              style: TextStyle(color: Colors.white),
+              onSubmitted: (text) {
+                setState(() {
+                  _text = text;
+                  _offset = 0;
+                });
+              },
               decoration: InputDecoration(
                 labelText: "Pesquisar GIF",
                 labelStyle: TextStyle(color: Colors.white),
@@ -47,7 +59,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<Map> _load() {
-    return GiphyApi.trending();
+    return GiphyApi.search(text: _text, offset: _offset);
   }
 
   Widget _buildGifs(BuildContext context, AsyncSnapshot snapshot) {
@@ -68,21 +80,51 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _buildGifsGrid(BuildContext context, AsyncSnapshot snapshot) {
+    int pageCount = snapshot.data["pagination"]["count"];
+
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
       itemBuilder: (context, index) {
-        final imgUrl =
-            snapshot.data["data"][index]["images"]["fixed_height"]["url"];
-        return GestureDetector(
-          child: Image.network(
-            imgUrl,
-            fit: BoxFit.cover,
-          ),
-        );
+        if (index < pageCount) {
+          final gif = snapshot.data["data"][index];
+          final imgUrl = gif["images"]["fixed_height"]["url"];
+
+          return GestureDetector(
+            onLongPress: () {
+              Share.share(imgUrl);
+            },
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => GifPage(gif)));
+            },
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: imgUrl,
+              fit: BoxFit.cover,
+            ),
+          );
+        } else {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _offset += pageCount;
+                print("offset: $_offset");
+              });
+            },
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 60,
+            ),
+          );
+        }
       },
-      itemCount: snapshot.data["pagination"]["count"],
+      itemCount: _countGifsLoaded(pageCount),
       padding: EdgeInsets.all(10),
     );
   }
+
+  int _countGifsLoaded(int count) =>
+      _text != null && _text.isNotEmpty ? count + 1 : count;
 }
