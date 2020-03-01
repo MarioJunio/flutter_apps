@@ -48,10 +48,14 @@ class _HomeState extends State<Home> {
   }
 
   void _addTask() {
+    final String taskDescription = fieldNewTaskController.text;
+
+    if (taskDescription.isEmpty) return;
+
     setState(() {
       final int newId = _tasksList.length;
 
-      _tasksList.add(Task(newId, fieldNewTaskController.text, false));
+      _tasksList.add(Task(newId, taskDescription, false));
       fieldNewTaskController.text = "";
 
       _saveTasks();
@@ -88,6 +92,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.teal,
       ),
@@ -109,16 +114,13 @@ class _HomeState extends State<Home> {
                     decoration: InputDecoration(
                         labelText: "Nova tarefa", border: OutlineInputBorder()),
                   )),
-                  Container(
-                    margin: EdgeInsets.only(left: 5),
-                    child: RaisedButton(
-                        onPressed: _addTask,
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        color: Colors.teal),
-                  )
+                  IconButton(
+                      icon: Icon(
+                        Icons.add_box,
+                        color: Colors.teal,
+                        size: 36,
+                      ),
+                      onPressed: _addTask),
                 ],
               ),
             ),

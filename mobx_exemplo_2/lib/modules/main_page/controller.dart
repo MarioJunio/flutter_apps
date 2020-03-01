@@ -59,7 +59,5 @@ abstract class _ControllerBase with Store {
     dirty = true;
   }
 
-  dispose() {
-    
-  }
+  dispose() {}
 }

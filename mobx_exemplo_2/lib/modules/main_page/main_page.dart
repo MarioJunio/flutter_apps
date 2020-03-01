@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobx_exemplo_2/modules/main_page/controller.dart';
-import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   Controller controller;
@@ -11,6 +11,8 @@ class MainPage extends StatelessWidget {
   FocusNode cpfFocus = FocusNode();
 
   MainPage() {
+    controller = GetIt.I.get<Controller>();
+
     nameFocus.addListener(() {
       if (!nameFocus.hasFocus) {
         controller.nameValidator();
@@ -35,7 +37,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller = Provider.of<Controller>(context);
+    //controller = Provider.of<Controller>(context);
 
     return Scaffold(
       appBar: AppBar(
