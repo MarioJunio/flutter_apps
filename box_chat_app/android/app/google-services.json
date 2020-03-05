@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "738639914441",
+    "firebase_url": "https://box-chat-app.firebaseio.com",
+    "project_id": "box-chat-app",
+    "storage_bucket": "box-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738639914441:android:df01b7df77fdcdfa00f418",
+        "android_client_info": {
+          "package_name": "br.com.mj.box_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "738639914441-3r0df4thvk9mipdl2tsjejrsc730o7ji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.mj.box_chat_app",
+            "certificate_hash": "2715cb093a8772823b9bc039093b4062ca79d509"
+          }
+        },
+        {
+          "client_id": "738639914441-iouhcumvb99a5qo6hjt4tq5h30ovs1tk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABkKXHhjLFNzTaCWx4nosOzJ_Iza5YX1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "738639914441-iouhcumvb99a5qo6hjt4tq5h30ovs1tk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
