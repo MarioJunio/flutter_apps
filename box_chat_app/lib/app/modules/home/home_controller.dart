@@ -6,10 +6,8 @@ class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
   @observable
-  int value = 0;
+  bool isTyping = false;
 
   @action
-  void increment() {
-    value++;
-  }
+  setIsTyping(String text) => isTyping = text.length > 0;
 }
