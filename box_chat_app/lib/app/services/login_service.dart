@@ -6,7 +6,7 @@ class LoginService extends Disposable {
   final googleSignIn = GoogleSignIn();
   final firebaseAuth = FirebaseAuth.instance;
 
-  performLogin() async {
+  Future<Null> performLogin() async {
     GoogleSignInAccount user = googleSignIn.currentUser;
 
     if (user == null) {
@@ -18,8 +18,11 @@ class LoginService extends Disposable {
     }
 
     if (user != null && (await firebaseAuth.currentUser()) == null) {
-      final GoogleSignInAuthentication authentication = await user.authentication;
-      final AuthCredential credential = GoogleAuthProvider.getCredential(idToken: authentication.idToken, accessToken: authentication.accessToken);
+      final GoogleSignInAuthentication authentication =
+          await user.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+          idToken: authentication.idToken,
+          accessToken: authentication.accessToken);
 
       await firebaseAuth.signInWithCredential(credential);
     }

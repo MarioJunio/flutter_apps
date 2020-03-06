@@ -13,6 +13,22 @@ class TextComposer extends StatefulWidget {
 
 class _TextComposerState extends State<TextComposer> {
   final HomeController controller = HomeModule.to.getBloc<HomeController>();
+  FocusNode _focusTextFieldMessage = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _focusTextFieldMessage.addListener(() async {
+      if (_focusTextFieldMessage.hasFocus) {
+        await controller.loginService.performLogin();
+
+        if (await controller.loginService.firebaseAuth.currentUser() == null) {
+          _focusTextFieldMessage.unfocus();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +52,7 @@ class _TextComposerState extends State<TextComposer> {
             ),
             Expanded(
               child: TextField(
+                focusNode: _focusTextFieldMessage,
                 onChanged: controller.setIsTyping,
                 decoration: InputDecoration.collapsed(
                     hintText: "Digite sua mensagem..."),
