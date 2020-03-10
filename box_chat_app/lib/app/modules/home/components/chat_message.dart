@@ -1,9 +1,20 @@
+import 'package:box_chat_app/app/model/message.dart';
+import 'package:box_chat_app/app/modules/home/home_controller.dart';
+import 'package:box_chat_app/app/modules/home/home_module.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessage extends StatelessWidget {
-  bool isLeft;
+  final HomeController controller = HomeModule.to.getBloc<HomeController>();
+  Message message;
+  bool isLeft = true;
 
-  ChatMessage({this.isLeft = true});
+  ChatMessage({this.message}) {
+    var user = controller.loginService.googleSignIn.currentUser;
+
+    if (user != null) {
+      this.isLeft = user.id != this.message.fromId; 
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +28,8 @@ class ChatMessage extends StatelessWidget {
             margin: isLeft
                 ? const EdgeInsets.only(right: 10)
                 : const EdgeInsets.only(left: 10),
-            child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://randomuser.me/api/portraits/women/65.jpg")),
+            child:
+                CircleAvatar(backgroundImage: NetworkImage(message.photoUrl)),
           ),
           Expanded(
             child: Column(
@@ -27,19 +37,25 @@ class ChatMessage extends StatelessWidget {
                   isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  "Natalia Souza",
+                  message.from,
                   style: Theme.of(context).textTheme.title,
                 ),
-                Text(
-                  "Pariatur reprehenderit laboris pariatur proident Lorem quis aliquip proident veniam amet do do consectetur.",
-                  textAlign: TextAlign.justify,
-                  style: Theme.of(context).textTheme.subhead,
-                )
+                _buildMessageBody(context),
               ],
             ),
           )
         ],
       ),
     );
+  }
+
+  _buildMessageBody(BuildContext context) {
+    return (message.type == MessageType.TEXT)
+        ? Text(
+            message.text,
+            textAlign: TextAlign.justify,
+            style: Theme.of(context).textTheme.subhead,
+          )
+        : Image.network(message.text);
   }
 }

@@ -1,5 +1,7 @@
 import 'package:box_chat_app/app/app_controller.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:box_chat_app/app/services/firebase_storage_service.dart';
+import 'package:box_chat_app/app/services/firestore_service.dart';
 import 'package:box_chat_app/app/services/login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:box_chat_app/app/app_widget.dart';
@@ -13,6 +15,8 @@ class AppModule extends ModuleWidget {
   @override
   List<Dependency> get dependencies => [
         Dependency((i) => LoginService()),
+        Dependency((i) => FirestoreService()),
+        Dependency((i) => FirebaseStorageService())
       ];
 
   @override

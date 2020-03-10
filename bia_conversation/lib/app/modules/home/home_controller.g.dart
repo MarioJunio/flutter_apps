@@ -9,6 +9,13 @@ part of 'home_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$HomeController on _HomeControllerBase, Store {
+  Computed<int> _$countMessagesComputed;
+
+  @override
+  int get countMessages =>
+      (_$countMessagesComputed ??= Computed<int>(() => super.countMessages))
+          .value;
+
   final _$messagesAtom = Atom(name: '_HomeControllerBase.messages');
 
   @override
@@ -26,78 +33,61 @@ mixin _$HomeController on _HomeControllerBase, Store {
     }, _$messagesAtom, name: '${_$messagesAtom.name}_set');
   }
 
-  final _$isTypingAtom = Atom(name: '_HomeControllerBase.isTyping');
+  final _$isSpeechingAtom = Atom(name: '_HomeControllerBase.isSpeeching');
 
   @override
-  bool get isTyping {
-    _$isTypingAtom.context.enforceReadPolicy(_$isTypingAtom);
-    _$isTypingAtom.reportObserved();
-    return super.isTyping;
+  bool get isSpeeching {
+    _$isSpeechingAtom.context.enforceReadPolicy(_$isSpeechingAtom);
+    _$isSpeechingAtom.reportObserved();
+    return super.isSpeeching;
   }
 
   @override
-  set isTyping(bool value) {
-    _$isTypingAtom.context.conditionallyRunInAction(() {
-      super.isTyping = value;
-      _$isTypingAtom.reportChanged();
-    }, _$isTypingAtom, name: '${_$isTypingAtom.name}_set');
-  }
-
-  final _$uploadImageAsyncAction = AsyncAction('uploadImage');
-
-  @override
-  Future<dynamic> uploadImage(File image) {
-    return _$uploadImageAsyncAction.run(() => super.uploadImage(image));
+  set isSpeeching(bool value) {
+    _$isSpeechingAtom.context.conditionallyRunInAction(() {
+      super.isSpeeching = value;
+      _$isSpeechingAtom.reportChanged();
+    }, _$isSpeechingAtom, name: '${_$isSpeechingAtom.name}_set');
   }
 
   final _$_HomeControllerBaseActionController =
       ActionController(name: '_HomeControllerBase');
 
   @override
-  dynamic listenMessages() {
+  dynamic clearMessages() {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
     try {
-      return super.listenMessages();
+      return super.clearMessages();
     } finally {
       _$_HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic setIsTyping(String text) {
+  dynamic addMessage(Message message) {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
     try {
-      return super.setIsTyping(text);
+      return super.addMessage(message);
     } finally {
       _$_HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic sendMessage(String text, Function onSuccess) {
+  Message getMessage(int index) {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
     try {
-      return super.sendMessage(text, onSuccess);
+      return super.getMessage(index);
     } finally {
       _$_HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic sendImage(String url, dynamic onSucess) {
+  dynamic changeSpeechStatus(bool isListening) {
     final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
     try {
-      return super.sendImage(url, onSucess);
-    } finally {
-      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void _addMessage(Message message) {
-    final _$actionInfo = _$_HomeControllerBaseActionController.startAction();
-    try {
-      return super._addMessage(message);
+      return super.changeSpeechStatus(isListening);
     } finally {
       _$_HomeControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -106,7 +96,7 @@ mixin _$HomeController on _HomeControllerBase, Store {
   @override
   String toString() {
     final string =
-        'messages: ${messages.toString()},isTyping: ${isTyping.toString()}';
+        'messages: ${messages.toString()},isSpeeching: ${isSpeeching.toString()},countMessages: ${countMessages.toString()}';
     return '{$string}';
   }
 }

@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:box_chat_app/app/model/message.dart';
 import 'package:box_chat_app/app/utils/app_util.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../home_controller.dart';
 import '../home_module.dart';
@@ -13,7 +19,8 @@ class TextComposer extends StatefulWidget {
 
 class _TextComposerState extends State<TextComposer> {
   final HomeController controller = HomeModule.to.getBloc<HomeController>();
-  FocusNode _focusTextFieldMessage = FocusNode();
+  final FocusNode _focusTextFieldMessage = FocusNode();
+  final TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -21,9 +28,15 @@ class _TextComposerState extends State<TextComposer> {
 
     _focusTextFieldMessage.addListener(() async {
       if (_focusTextFieldMessage.hasFocus) {
-        await controller.loginService.performLogin();
+        try {
+          await controller.loginService.performLogin();
 
-        if (await controller.loginService.firebaseAuth.currentUser() == null) {
+          if (await controller.loginService.firebaseAuth.currentUser() ==
+              null) {
+            _focusTextFieldMessage.unfocus();
+          }
+        } catch (e) {
+          print(e);
           _focusTextFieldMessage.unfocus();
         }
       }
@@ -48,10 +61,11 @@ class _TextComposerState extends State<TextComposer> {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.camera_alt),
-              onPressed: () {},
+              onPressed: _takePicture,
             ),
             Expanded(
               child: TextField(
+                controller: textController,
                 focusNode: _focusTextFieldMessage,
                 onChanged: controller.setIsTyping,
                 decoration: InputDecoration.collapsed(
@@ -78,6 +92,22 @@ class _TextComposerState extends State<TextComposer> {
   }
 
   void _sendMessage() {
-    return null;
+    controller.sendMessage(textController.text, () {
+      textController.clear();
+      controller.setIsTyping(textController.text);
+    });
+  }
+
+  void _takePicture() async {
+    await controller.loginService.performLogin();
+
+    if (await controller.loginService.firebaseAuth.currentUser() != null) {
+      File image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+      if (image != null) {
+        String url = await controller.uploadImage(image);
+        controller.sendImage(url, () {});
+      }
+    }
   }
 }
