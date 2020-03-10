@@ -30,11 +30,6 @@ abstract class _HomeControllerBase with Store {
 
   @action
   changeSpeechStatus(bool isListening) {
-
-    if (isListening) {
-      isSpeeching = true;
-    } else {
-      isSpeeching = false;
-    }
+    this.isSpeeching = isListening;
   }
 }

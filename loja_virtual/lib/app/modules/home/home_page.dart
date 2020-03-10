@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_module.dart';
+import 'package:loja_virtual/app/modules/produtos/produtos_module.dart';
+
+import '../../app_module.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -7,7 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PageController pageController = PageController();
+  PageController pageController = AppModule.to.getBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +20,7 @@ class _HomePageState extends State<HomePage> {
         controller: pageController,
         children: <Widget>[
           ApresentationModule(),
+          ProdutosModule()
         ],
       ),
     );

@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_controller.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_module.dart';
+import 'package:loja_virtual/app/modules/home/widgets/custom_drawer.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ApresentationPage extends StatefulWidget {
   @override
@@ -13,11 +17,14 @@ class _ApresentationPageState extends State<ApresentationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        _buildBackground(),
-        _buildBody(),
-      ],
+    return Scaffold(
+      drawer: CustomDrawer(),
+      body: Stack(
+        children: <Widget>[
+          _buildBackground(),
+          _buildBody(),
+        ],
+      ),
     );
   }
 
@@ -45,7 +52,10 @@ class _ApresentationPageState extends State<ApresentationPage> {
           snap: true,
           elevation: 0,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text("Novidades"),
+            title: Text(
+              "Novidades",
+              style: TextStyle(color: Theme.of(context).primaryColorDark),
+            ),
             centerTitle: true,
           ),
         ),
@@ -58,17 +68,35 @@ class _ApresentationPageState extends State<ApresentationPage> {
     if (!snapshot.hasData) {
       return SliverToBoxAdapter(
         child: Container(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(Colors.blue),
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor:
+                  AlwaysStoppedAnimation(Theme.of(context).primaryColorDark),
+            ),
           ),
         ),
       );
     }
 
-    return SliverToBoxAdapter(
-      child: Container(
-        color: Colors.amber,
-      ),
+    List<DocumentSnapshot> documents = snapshot.data.documents;
+    List<StaggeredTile> tiles = documents
+        .map((doc) => StaggeredTile.count(doc.data["x"], doc.data["y"]))
+        .toList();
+
+    List<Widget> images = documents
+        .map((doc) => FadeInImage.memoryNetwork(
+            fit: BoxFit.cover,
+            placeholder: kTransparentImage,
+            image: doc.data["image"]))
+        .toList();
+
+    return SliverStaggeredGrid.count(
+      crossAxisCount: 2,
+      mainAxisSpacing: 1,
+      crossAxisSpacing: 1,
+      staggeredTiles: tiles,
+      children: images,
     );
   }
 }

@@ -12,5 +12,5 @@ abstract class _ApresentationControllerBase with Store {
   FirestoreService firestoreService =
       ApresentationModule.to.getDependency<FirestoreService>();
 
-  Future<QuerySnapshot> get images => firestoreService.all("home");
+  Future<QuerySnapshot> get images => firestoreService.getHome();
 }

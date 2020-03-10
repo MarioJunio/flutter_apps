@@ -7,6 +7,7 @@ class AppModule extends ModuleWidget {
   @override
   List<Bloc> get blocs => [
         Bloc((i) => AppController()),
+        Bloc((i) => PageController())
       ];
 
   @override
