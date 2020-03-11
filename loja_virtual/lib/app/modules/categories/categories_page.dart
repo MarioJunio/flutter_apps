@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/app/modules/categories/categories_controller.dart';
+import 'package:loja_virtual/app/modules/categories/categories_module.dart';
 import 'package:loja_virtual/app/modules/home/widgets/custom_drawer.dart';
-import 'package:loja_virtual/app/modules/produtos/produtos_controller.dart';
-import 'package:loja_virtual/app/modules/produtos/produtos_module.dart';
 
-class ProdutosPage extends StatefulWidget {
+class CategoriesPage extends StatefulWidget {
   @override
-  _ProdutosPageState createState() => _ProdutosPageState();
+  _CategoriesPageState createState() => _CategoriesPageState();
 }
 
-class _ProdutosPageState extends State<ProdutosPage> {
-  final ProdutosController controller = ProdutosModule.to.getBloc();
+class _CategoriesPageState extends State<CategoriesPage> {
+  final CategoriesController controller = CategoriesModule.to.getBloc();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: CustomDrawer(),
       appBar: AppBar(
-        title: Text("Produtos"),
+        title: Text("Categorias"),
         centerTitle: true,
       ),
       body: FutureBuilder(

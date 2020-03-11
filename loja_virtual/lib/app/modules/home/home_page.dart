@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_module.dart';
-import 'package:loja_virtual/app/modules/produtos/produtos_module.dart';
+import 'package:loja_virtual/app/modules/categories/categories_module.dart';
 
 import '../../app_module.dart';
 
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
         controller: pageController,
         children: <Widget>[
           ApresentationModule(),
-          ProdutosModule()
+          CategoriesModule(),
         ],
       ),
     );
