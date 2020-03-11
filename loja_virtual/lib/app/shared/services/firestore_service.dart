@@ -6,6 +6,12 @@ class FirestoreService {
   Future<QuerySnapshot> getHome() =>
       firestore.collection("home").orderBy("pos").getDocuments();
 
-  Future<QuerySnapshot> getProducts() =>
+  Future<QuerySnapshot> getCategories() =>
       firestore.collection("produtos").getDocuments();
+
+  Future<QuerySnapshot> getProdutos(String idCategory) => firestore
+      .collection("produtos")
+      .document(idCategory)
+      .collection("items")
+      .getDocuments();
 }

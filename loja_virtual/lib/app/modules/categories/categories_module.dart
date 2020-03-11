@@ -2,8 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/categories/categories_controller.dart';
 import 'package:loja_virtual/app/modules/categories/categories_page.dart';
-
-import '../../services/firestore_service.dart';
+import 'package:loja_virtual/app/shared/services/firestore_service.dart';
 
 class CategoriesModule extends ModuleWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_module.dart';
-import 'package:loja_virtual/app/services/firestore_service.dart';
+import 'package:loja_virtual/app/shared/services/firestore_service.dart';
 import 'package:mobx/mobx.dart';
 
 part 'apresentation_controller.g.dart';

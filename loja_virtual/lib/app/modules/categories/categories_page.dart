@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/categories/categories_controller.dart';
 import 'package:loja_virtual/app/modules/categories/categories_module.dart';
 import 'package:loja_virtual/app/modules/home/widgets/custom_drawer.dart';
+import 'package:loja_virtual/app/modules/products/products_module.dart';
+import 'package:loja_virtual/app/shared/models/category.dart';
 
 class CategoriesPage extends StatefulWidget {
   @override
@@ -54,6 +56,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Widget _buildListTile(DocumentSnapshot document) => ListTile(
+        onTap: () {
+          _toProducts(document);
+        },
         contentPadding: EdgeInsets.all(15),
         leading: Image.network(
           document.data["icon"],
@@ -68,4 +73,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
           size: 30,
         ),
       );
+
+  void _toProducts(DocumentSnapshot document) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProductsModule(Category.fromMap(document.documentID, document.data))),
+    );
+  }
 }

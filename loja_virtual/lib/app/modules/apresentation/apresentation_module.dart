@@ -2,7 +2,7 @@ import 'package:loja_virtual/app/modules/apresentation/apresentation_controller.
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/apresentation/apresentation_page.dart';
-import 'package:loja_virtual/app/services/firestore_service.dart';
+import 'package:loja_virtual/app/shared/services/firestore_service.dart';
 
 class ApresentationModule extends ModuleWidget {
   @override
