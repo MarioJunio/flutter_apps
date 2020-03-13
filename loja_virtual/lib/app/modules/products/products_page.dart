@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/modules/products/products_controller.dart';
 import 'package:loja_virtual/app/modules/products/products_module.dart';
-import 'package:loja_virtual/app/modules/products/widgets/grid_list.dart';
+import 'package:loja_virtual/app/modules/products/widgets/grid_list_products.dart';
+import 'package:loja_virtual/app/modules/products/widgets/list_products.dart';
 
 class ProductsPage extends StatefulWidget {
   @override
@@ -51,6 +51,10 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   Widget _buildGrid() {
-    return GridList(snapshot: controller.products);
+    return GridListProducts(snapshot: controller.products);
+  }
+
+  Widget _buildList() {
+    return ListProducts(snapshot: controller.products);
   }
 }

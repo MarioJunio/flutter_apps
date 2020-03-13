@@ -2,16 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/app/shared/models/product.dart';
 
-class GridList extends StatefulWidget {
+class GridListProducts extends StatefulWidget {
   final Future<QuerySnapshot> snapshot;
 
-  const GridList({Key key, this.snapshot}) : super(key: key);
+  const GridListProducts({Key key, this.snapshot}) : super(key: key);
 
   @override
-  _GridListState createState() => _GridListState();
+  _GridListProductsState createState() => _GridListProductsState();
 }
 
-class _GridListState extends State<GridList> {
+class _GridListProductsState extends State<GridListProducts> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,8 +48,42 @@ class _GridListState extends State<GridList> {
   Widget _buildGridItem(DocumentSnapshot document) {
     Product product = Product.fromMap(document.documentID, document.data);
 
-    return GridTile(
-      child: Text(product.description),
+    return InkWell(
+      child: Card(
+        elevation: 1,
+        child: Container(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  child: AspectRatio(
+                    aspectRatio: 0.8,
+                    child: Image.network(product.images[0], fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                product.description,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              Divider(),
+              Text(
+                "R\$ ${product.price.toStringAsFixed(2)}",
+                style: TextStyle(
+                    color: Colors.teal,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
