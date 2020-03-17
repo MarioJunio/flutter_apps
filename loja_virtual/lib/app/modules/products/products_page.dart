@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/app/modules/products/product_details/product_details_page.dart';
 import 'package:loja_virtual/app/modules/products/products_controller.dart';
 import 'package:loja_virtual/app/modules/products/products_module.dart';
 import 'package:loja_virtual/app/modules/products/widgets/grid_list_products.dart';
 import 'package:loja_virtual/app/modules/products/widgets/list_products.dart';
+import 'package:loja_virtual/app/shared/models/product.dart';
 
 class ProductsPage extends StatefulWidget {
   @override
@@ -43,7 +45,7 @@ class _ProductsPageState extends State<ProductsPage> {
           physics: NeverScrollableScrollPhysics(),
           children: [
             _buildGrid(),
-            Container(color: Colors.lightGreen),
+            _buildList(),
           ],
         ),
       ),
@@ -51,10 +53,23 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   Widget _buildGrid() {
-    return GridListProducts(snapshot: controller.products);
+    return GridListProducts(
+      snapshot: controller.products,
+      onTapItem: _navigateToProductDetails,
+    );
   }
 
   Widget _buildList() {
-    return ListProducts(snapshot: controller.products);
+    return ListProducts(
+      snapshot: controller.products,
+      onTapItem: _navigateToProductDetails,
+    );
+  }
+
+  void _navigateToProductDetails(Product product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => ProductDetailsPage(product: product)),
+    );
   }
 }

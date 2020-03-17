@@ -4,8 +4,10 @@ import 'package:loja_virtual/app/shared/models/product.dart';
 
 class GridListProducts extends StatefulWidget {
   final Future<QuerySnapshot> snapshot;
+  final Function onTapItem;
 
-  const GridListProducts({Key key, this.snapshot}) : super(key: key);
+  const GridListProducts({Key key, this.snapshot, this.onTapItem})
+      : super(key: key);
 
   @override
   _GridListProductsState createState() => _GridListProductsState();
@@ -49,6 +51,9 @@ class _GridListProductsState extends State<GridListProducts> {
     Product product = Product.fromMap(document.documentID, document.data);
 
     return InkWell(
+      onTap: () {
+        widget.onTapItem(product);
+      },
       child: Card(
         elevation: 1,
         child: Container(
